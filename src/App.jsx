@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Slide from '@mui/material/Slide';
 import {
   Box,
   AppBar,
@@ -62,45 +63,45 @@ const getDesignTokens = (mode) => ({
     mode,
     ...(mode === 'light'
       ? {
-          primary: {
-            main: '#4a6fa5',
-            light: '#7895c7',
-            dark: '#2c4d7a',
-          },
-          secondary: {
-            main: '#ff7043',
-            light: '#ff9e75',
-            dark: '#c53f13',
-          },
-          background: {
-            default: '#f8fafc',
-            paper: '#ffffff',
-          },
-          text: {
-            primary: '#1e293b',
-            secondary: '#64748b',
-          },
-        }
+        primary: {
+          main: '#4a6fa5',
+          light: '#7895c7',
+          dark: '#2c4d7a',
+        },
+        secondary: {
+          main: '#ff7043',
+          light: '#ff9e75',
+          dark: '#c53f13',
+        },
+        background: {
+          default: '#f8fafc',
+          paper: '#ffffff',
+        },
+        text: {
+          primary: '#1e293b',
+          secondary: '#64748b',
+        },
+      }
       : {
-          primary: {
-            main: '#7895c7',
-            light: '#a6b9dc',
-            dark: '#4a6fa5',
-          },
-          secondary: {
-            main: '#ff9e75',
-            light: '#ffcfbc',
-            dark: '#ff7043',
-          },
-          background: {
-            default: '#0f172a',
-            paper: '#1e293b',
-          },
-          text: {
-            primary: '#f1f5f9',
-            secondary: '#94a3b8',
-          },
-        }),
+        primary: {
+          main: '#7895c7',
+          light: '#a6b9dc',
+          dark: '#4a6fa5',
+        },
+        secondary: {
+          main: '#ff9e75',
+          light: '#ffcfbc',
+          dark: '#ff7043',
+        },
+        background: {
+          default: '#0f172a',
+          paper: '#1e293b',
+        },
+        text: {
+          primary: '#f1f5f9',
+          secondary: '#94a3b8',
+        },
+      }),
   },
   shape: {
     borderRadius: 12,
@@ -132,17 +133,17 @@ const getDesignTokens = (mode) => ({
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: mode === 'light' 
-            ? '0px 4px 10px rgba(30,41,59,0.06)' 
+          boxShadow: mode === 'light'
+            ? '0px 4px 10px rgba(30,41,59,0.06)'
             : '0px 4px 10px rgba(0,0,0,0.3)',
-          border: mode === 'light' 
-            ? '1px solid #e2e8f0' 
+          border: mode === 'light'
+            ? '1px solid #e2e8f0'
             : '1px solid #334155',
           transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
           '&:hover': {
             transform: 'translateY(-4px)',
-            boxShadow: mode === 'light' 
-              ? '0px 8px 20px rgba(30,41,59,0.1)' 
+            boxShadow: mode === 'light'
+              ? '0px 8px 20px rgba(30,41,59,0.1)'
               : '0px 8px 20px rgba(0,0,0,0.4)',
           },
         },
@@ -181,19 +182,25 @@ function Dashboard() {
         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
           Dashboard belajaran
         </Typography>
-        <Button 
-          variant="contained" 
+        <Button
+          color="primary"
+          variant="contained"
           startIcon={<AddIcon />}
           onClick={handleAddGoal}
+          sx={{
+            "&:focus": { outline: "none" },
+            "&:focusVisible": { outline: "none" },
+            textTransform: "none",
+          }}
         >
           Tambah Target
         </Button>
       </Box>
-      
+
       {/* Statistik - Grid dengan spacing lebih rapat */}
       <Grid container spacing={2} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} lg={3}>
-          <Card sx={{ 
+          <Card sx={{
             background: theme.palette.mode === 'light'
               ? 'linear-gradient(135deg, #4a6fa5 0%, #7895c7 100%)'
               : 'linear-gradient(135deg, #2c4d7a 0%, #4a6fa5 100%)',
@@ -209,7 +216,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <Card sx={{ 
+          <Card sx={{
             background: theme.palette.mode === 'light'
               ? 'linear-gradient(135deg, #ff7043 0%, #ff9e75 100%)'
               : 'linear-gradient(135deg, #c53f13 0%, #ff7043 100%)',
@@ -225,7 +232,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <Card sx={{ 
+          <Card sx={{
             background: theme.palette.mode === 'light'
               ? 'linear-gradient(135deg, #4caf50 0%, #81c784 100%)'
               : "linear-gradient(135deg, #388e3c 0%, #4caf50 100%)",
@@ -241,7 +248,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <Card sx={{ 
+          <Card sx={{
             background: theme.palette.mode === 'light'
               ? "linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%)"
               : "linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%)",
@@ -265,105 +272,105 @@ function Dashboard() {
             <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
               Progress Pembelajaran
             </Typography>
-            
+
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="body2">Matematika Dasar</Typography>
                 <Typography variant="body2">75%</Typography>
               </Box>
-              <LinearProgress 
-                variant="determinate" 
-                value={75} 
-                sx={{ 
-                  height: 8, 
+              <LinearProgress
+                variant="determinate"
+                value={75}
+                sx={{
+                  height: 8,
                   borderRadius: 4,
                   backgroundColor: alpha(theme.palette.primary.main, 0.2),
                   '& .MuiLinearProgress-bar': {
                     borderRadius: 4,
                     backgroundColor: theme.palette.primary.main
                   }
-                }} 
+                }}
               />
             </Box>
-            
+
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="body2">Kimia</Typography>
                 <Typography variant="body2">45%</Typography>
               </Box>
-              <LinearProgress 
-                variant="determinate" 
-                value={45} 
-                sx={{ 
-                  height: 8, 
+              <LinearProgress
+                variant="determinate"
+                value={45}
+                sx={{
+                  height: 8,
                   borderRadius: 4,
                   backgroundColor: alpha(theme.palette.secondary.main, 0.2),
                   '& .MuiLinearProgress-bar': {
                     borderRadius: 4,
                     backgroundColor: theme.palette.secondary.main
                   }
-                }} 
+                }}
               />
             </Box>
-            
+
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="body2">Bahasa Inggris</Typography>
                 <Typography variant="body2">90%</Typography>
               </Box>
-              <LinearProgress 
-                variant="determinate" 
-                value={90} 
-                sx={{ 
-                  height: 8, 
+              <LinearProgress
+                variant="determinate"
+                value={90}
+                sx={{
+                  height: 8,
                   borderRadius: 4,
                   backgroundColor: alpha('#4caf50', 0.2),
                   '& .MuiLinearProgress-bar': {
                     borderRadius: 4,
                     backgroundColor: '#4caf50'
                   }
-                }} 
+                }}
               />
             </Box>
 
             <Divider sx={{ my: 2 }} />
-            
+
             <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mt: 3 }}>
               Target Pembelajaran
             </Typography>
-            
+
             {goals.map((goal) => (
               <Box key={goal.id} sx={{ mb: 3 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                   <Typography variant="body2">{goal.title}</Typography>
                   <Typography variant="body2">{Math.round((goal.current / goal.target) * 100)}%</Typography>
                 </Box>
-                <LinearProgress 
-                  variant="determinate" 
-                  value={(goal.current / goal.target) * 100} 
-                  sx={{ 
-                    height: 8, 
+                <LinearProgress
+                  variant="determinate"
+                  value={(goal.current / goal.target) * 100}
+                  sx={{
+                    height: 8,
                     borderRadius: 4,
                     backgroundColor: alpha('#9c27b0', 0.2),
                     '& .MuiLinearProgress-bar': {
                       borderRadius: 4,
                       backgroundColor: '#9c27b0'
                     }
-                  }} 
+                  }}
                 />
               </Box>
             ))}
           </Card>
         </Grid>
-        
+
         <Grid item xs={12} lg={4}>
           <Card sx={{ p: 3, height: '100%' }}>
             <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
               Aktivitas Terbaru
             </Typography>
-            
-            <Box sx={{ 
-              maxHeight: 400, 
+
+            <Box sx={{
+              maxHeight: 400,
               overflow: 'auto',
               '& > div': { mb: 2 }
             }}>
@@ -382,9 +389,9 @@ function Dashboard() {
                   <Typography variant="caption">2 jam yang lalu</Typography>
                 </Box>
               </Box>
-              
+
               <Divider sx={{ my: 1 }} />
-              
+
               <Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
@@ -400,9 +407,9 @@ function Dashboard() {
                   <Typography variant="caption">1 hari yang lalu</Typography>
                 </Box>
               </Box>
-              
+
               <Divider sx={{ my: 1 }} />
-              
+
               <Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
@@ -420,7 +427,7 @@ function Dashboard() {
               </Box>
 
               <Divider sx={{ my: 1 }} />
-              
+
               <Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
@@ -441,9 +448,9 @@ function Dashboard() {
         </Grid>
       </Grid>
 
-      <Snackbar 
-        open={showFeedback} 
-        autoHideDuration={3000} 
+      <Snackbar
+        open={showFeedback}
+        autoHideDuration={3000}
         onClose={handleCloseFeedback}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
@@ -461,90 +468,104 @@ function NavigationDrawer({ open, onClose, darkMode, setDarkMode, drawerOpen, se
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
-
   const menuItems = [
-    { id: 'home', label: 'Beranda', icon: <HomeIcon />, path: '/' },
-    { id: 'chatbot', label: 'Chatbot AI', icon: <ChatIcon />, path: '/chatbot' },
+    {
+      id: 'home', label: <span style={{ color: darkMode ? "#fff" : "#7895c7" }}>
+        Beranda
+      </span>,
+      icon: <HomeIcon />, path: '/'
+    },
+    {
+      id: 'chatbot', label: <span style={{ color: darkMode ? "#fff" : "#7895c7" }}>
+        Chatbot AI
+      </span>,
+      icon: <ChatIcon />, path: '/chatbot'
+    },
   ];
 
   const drawerContent = (
-    <Box sx={{ width: 280, height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>E</Avatar>
-          <Box>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>EduLearn</Typography>
-            <Typography variant="body2" color="text.secondary">Dashboard Siswa</Typography>
+    <Slide direction="right" in={open || drawerOpen} mountOnEnter unmountOnExit timeout={300}>
+      <Box sx={{ width: 280, height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>E</Avatar>
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>EduLearn</Typography>
+              <Typography variant="body2" color="text.secondary">Dashboard Siswa</Typography>
+            </Box>
           </Box>
+          {isMobile && (
+            <IconButton onClick={onClose}>
+              <Close />
+            </IconButton>
+          )}
         </Box>
-        {isMobile && (
-          <IconButton onClick={onClose}>
-            <Close />
-          </IconButton>
-        )}
-      </Box>
-      
-      <Divider />
-      
-      <List sx={{ flexGrow: 1, pt: 2 }}>
-        {menuItems.map((item) => (
-          <ListItem 
-            button 
-            key={item.id} 
-            component={Link} 
-            to={item.path}
-            onClick={isMobile ? onClose : undefined}
-            sx={{
-              borderRadius: 2,
-              mx: 1,
-              mb: 0.5,
-              '&:hover': {
-                backgroundColor: alpha(theme.palette.primary.main, 0.1),
-              }
-            }}
-          >
-            <ListItemIcon sx={{ color: 'primary.main' }}>
-              {item.icon}
+
+        <Divider sx={{ mr: -2.4 }} />
+
+        <List sx={{ flexGrow: 1, pt: 2 }}>
+          {menuItems.map((item) => (
+            <ListItem
+              button
+              key={item.id}
+              component={Link}
+              to={item.path}
+              onClick={isMobile ? onClose : undefined}
+              sx={{
+                borderRadius: 2,
+                mx: 1,
+                mb: 0.5,
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.07),
+                },
+                '&:focus': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.15),
+                }
+              }}
+            >
+              <ListItemIcon sx={{ color: 'primary.main' }}>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItem>
+          ))}
+        </List>
+
+        <Divider sx={{ mr: -2.4 }} />
+
+        <Box sx={{ p: 2 }}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={darkMode}
+                onChange={() => setDarkMode(!darkMode)}
+                color="primary"
+              />
+            }
+            label={darkMode ? "Mode Gelap" : "Mode Terang"}
+            sx={{ mb: 2 }}
+          />
+
+          <FormControlLabel
+            control={
+              <Switch
+                checked={notificationsEnabled}
+                onChange={() => setNotificationsEnabled(!notificationsEnabled)}
+                color="primary"
+              />
+            }
+            label="Notifikasi"
+          />
+
+          <ListItem button sx={{ borderRadius: 2, mt: 1 }}>
+            <ListItemIcon>
+              <ExitToApp />
             </ListItemIcon>
-            <ListItemText primary={item.label} />
+            <ListItemText primary="Keluar" />
           </ListItem>
-        ))}
-      </List>
-      
-      <Divider />
-      
-      <Box sx={{ p: 2 }}>
-        <FormControlLabel
-          control={
-            <Switch 
-              checked={darkMode} 
-              onChange={() => setDarkMode(!darkMode)}
-              color="primary"
-            />
-          }
-          label={darkMode ? "Mode Gelap" : "Mode Terang"}
-          sx={{ mb: 2 }}
-        />
-        
-        <FormControlLabel
-          control={
-            <Switch 
-              checked={notificationsEnabled} 
-              onChange={() => setNotificationsEnabled(!notificationsEnabled)}
-              color="primary"
-            />
-          }
-          label="Notifikasi"
-        />
-        
-        <ListItem button sx={{ borderRadius: 2, mt: 1 }}>
-          <ListItemIcon>
-            <ExitToApp />
-          </ListItemIcon>
-          <ListItemText primary="Keluar" />
-        </ListItem>
+        </Box>
       </Box>
-    </Box>
+    </Slide>
   );
 
   if (!drawerOpen && !isMobile) return null;
@@ -559,7 +580,11 @@ function NavigationDrawer({ open, onClose, darkMode, setDarkMode, drawerOpen, se
           ModalProps={{ keepMounted: true }}
           sx={{
             display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280 },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: 280,
+              transition: 'transform 0.3s ease-in-out', // Smooth transition
+            },
           }}
         >
           {drawerContent}
@@ -570,11 +595,12 @@ function NavigationDrawer({ open, onClose, darkMode, setDarkMode, drawerOpen, se
           open={drawerOpen}
           sx={{
             display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
-              width: 280,
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: 300,
               position: 'relative',
-              height: '100vh'
+              height: '100vh',
+              transition: 'transform 0.3s ease-in-out', // Smooth transition
             },
           }}
         >
@@ -585,23 +611,28 @@ function NavigationDrawer({ open, onClose, darkMode, setDarkMode, drawerOpen, se
   );
 }
 
+
+
+
 // komponen Chatbot 
 function Chatbot() {
+  const theme = useTheme();
   const [messages, setMessages] = useState([
     { text: "Halo! Saya EduBot. Ada yang ingin kamu tanyakan?", sender: "bot" }
   ]);
+
   const [inputValue, setInputValue] = useState("");
 
   const handleSendMessage = () => {
     if (inputValue.trim()) {
       setMessages([...messages, { text: inputValue, sender: "user" }]);
       setInputValue("");
-      
+
       // coba respon bot
       setTimeout(() => {
-        setMessages(prev => [...prev, { 
-          text: "Terima kasih atas pertanyaannya. Saya akan membantu Anda mencari informasi yang diperlukan.", 
-          sender: "bot" 
+        setMessages(prev => [...prev, {
+          text: "Terima kasih atas pertanyaannya. Saya akan membantu Anda mencari informasi yang diperlukan.",
+          sender: "bot"
         }]);
       }, 1000);
     }
@@ -612,13 +643,13 @@ function Chatbot() {
       <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
         EduBot AI Assistant
       </Typography>
-      
-      <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 2 }}>
-        <Box sx={{ 
-          flexGrow: 1, 
-          overflow: 'auto', 
-          mb: 2, 
-          p: 2, 
+
+      <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 5, borderRadius: 3 }}>
+        <Box sx={{
+          flexGrow: 1,
+          overflow: 'auto',
+          mb: 2,
+          p: 3,
           backgroundColor: 'background.default',
           borderRadius: 2,
           minHeight: 400
@@ -636,8 +667,18 @@ function Chatbot() {
                 sx={{
                   p: 2,
                   maxWidth: '70%',
-                  backgroundColor: msg.sender === 'user' ? 'primary.main' : 'grey.100',
-                  color: msg.sender === 'user' ? 'primary.contrastText' : 'text.primary',
+                  backgroundColor: msg.sender === 'user'
+                    ? theme.palette.primary.main
+                    : theme.palette.mode === 'dark'
+                      ? "#435b88ff"
+                      : theme.palette.common.white,
+                  color: msg.sender === 'user'
+                    ? theme.palette.primary.contrastText
+                    : theme.palette.mode === 'dark'
+                      ? theme.palette.common.white
+                      : theme.palette.text.primary,
+                  borderRadius: 3,
+                  boxShadow: "0px 2px 9px rgba(0,0,0,0.15)"
                 }}
               >
                 <Typography variant="body1">{msg.text}</Typography>
@@ -645,7 +686,7 @@ function Chatbot() {
             </Box>
           ))}
         </Box>
-        
+
         <Box sx={{ display: 'flex' }}>
           <TextField
             fullWidth
@@ -654,10 +695,29 @@ function Chatbot() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "50px",
+                "& fieldset": {
+                  borderColor: theme.palette.mode === "dark" ? "#061829ff" : theme.palette.primary.main, 
+                  transition: "border-color 0.3s ease", 
+                },
+                "&:hover fieldset": {
+                  borderColor: theme.palette.primary.main,
+                }
+              }
+            }}
           />
-          <Button 
-            variant="contained" 
-            sx={{ ml: 1 }} 
+          <Button
+            variant="contained"
+            sx={{
+              ml: 1,
+              textTransform: "none",
+              borderRadius: "50px",
+              px: 3,
+              "&:focus": { outline: "none" },
+              "&:focusVisible": { outline: "none" },
+            }}
             onClick={handleSendMessage}
           >
             Kirim
@@ -675,7 +735,7 @@ function App() {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  
+
   const muiTheme = createTheme(getDesignTokens(darkMode ? 'dark' : 'light'));
 
   const handleDrawerToggle = () => {
@@ -699,8 +759,8 @@ function App() {
 
   return (
     <ThemeProvider theme={muiTheme}>
-      <Box sx={{ 
-        display: 'flex', 
+      <Box sx={{
+        display: 'flex',
         bgcolor: 'background.default',
         minHeight: '100vh',
         color: 'text.primary',
@@ -710,60 +770,80 @@ function App() {
       }}>
         <Router>
           {/* Navbar yang menyesuaikan lebar */}
-          <AppBar 
-            position="fixed" 
+          <AppBar
+            position="fixed"
             elevation={0}
-            sx={{ 
-              width: drawerOpen ? { md: `calc(100% - 280px)` } : '100%', 
+            sx={{
+              width: drawerOpen ? { md: `calc(100% - 280px)` } : '100%',
               ml: drawerOpen ? { md: `280px` } : 0,
               bgcolor: 'background.paper',
               color: 'text.primary',
               borderBottom: '1px solid',
               borderColor: 'divider',
-              transition: 'all 0.3s ease',
+              transition: 'all 0.3s ease-in-out',
               left: 0,
               right: 0
             }}
           >
             <Toolbar>
               <IconButton
+                disableRipple
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
                 onClick={() => setDrawerOpen(!drawerOpen)}
-                sx={{ mr: 2, display: { md: 'block' } }}
+                sx={{
+                  mr: 2,
+                  display: { md: 'block' },
+                  left: 10,
+                  borderRadius: 1,
+                  border: "none",
+                  outline: "none",
+                  "&:focus": { outline: "none" },
+                  "&:focusVisible": { outline: "none" },
+                  "&:hover": { backgroundColor: "transparent" }
+                }}
               >
-                <MenuIcon />
+                {drawerOpen ? <Close /> : <MenuIcon />}
               </IconButton>
-              
+
+
               <Typography
                 variant="h6"
                 component="div"
-                sx={{ 
-                  flexGrow: 1, 
+                sx={{
+                  flexGrow: 1,
                   fontWeight: 'bold',
                 }}
               >
-                 Education
+                Education
               </Typography>
-              
+
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <IconButton 
-                  color="inherit" 
-                  sx={{ mr: 1 }}
+                <IconButton
+                  color="inherit"
+                  sx={{
+                    mr: 1,
+                    border: "none",
+                    outline: "none",
+                    "&:focus": { outline: "none" },
+                    "&:focusVisible": { outline: "none" },
+                    "&:hover": { backgroundColor: "transparent" }
+                  }}
                   onClick={handleNotificationClick}
                 >
+
                   <Badge badgeContent={3} color="error">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
-                
+
                 <Box sx={{ display: 'flex', alignItems: 'center', ml: 2 }}>
-                  <Avatar 
-                    sx={{ 
-                      width: 32, 
-                      height: 32, 
-                      bgcolor: 'primary.main', 
+                  <Avatar
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      bgcolor: 'primary.main',
                       mr: 1,
                       cursor: 'pointer',
                       transition: 'transform 0.2s',
@@ -783,8 +863,8 @@ function App() {
           </AppBar>
 
           {/* Sidebar/Navigasi */}
-          <NavigationDrawer 
-            open={mobileOpen} 
+          <NavigationDrawer
+            open={mobileOpen}
             onClose={handleDrawerToggle}
             darkMode={darkMode}
             setDarkMode={setDarkMode}
@@ -799,9 +879,9 @@ function App() {
               flexGrow: 1,
               p: 3,
               width: drawerOpen ? { md: `calc(100% - 280px)` } : '100%',
-              ml: drawerOpen ? { md: `280px` } : 0,
+              ml: drawerOpen ? { md: `0px` } : 0,
               mt: '64px',
-              transition: 'all 0.3s ease',
+              transition: 'all 0.3s ease-in-out',
               maxWidth: '100%',
               overflow: 'hidden'
             }}
@@ -818,6 +898,8 @@ function App() {
               position: 'fixed',
               bottom: 16,
               right: 16,
+              "&:focus": { outline: "none" },
+              "&:focusVisible": { outline: "none" }
             }}
             onClick={() => setDarkMode(!darkMode)}
           >
