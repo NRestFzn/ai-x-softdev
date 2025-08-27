@@ -1,184 +1,146 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
-  IconButton,
-  TextField,
-  Paper,
   Typography,
-  Stack,
-  Fade,
-  Avatar,
-  CircularProgress,
+  Card,
+  Paper,
+  TextField,
+  Button,
 } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import SmartToyIcon from "@mui/icons-material/SmartToy";
+import { useTheme } from "@mui/material/styles";
 
-// Import material-ui icons
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
-export default function Chatbot() {
+function Chatbot() {
+  const theme = useTheme();
   const [messages, setMessages] = useState([
-    { from: "bot", text: "Halo 👋, saya EduBot. Ada yang ingin kamu tanyakan?" },
+    {
+      text: "Halo! Saya EduBot. Ada yang ingin kamu tanyakan?",
+      sender: "bot",
+    },
   ]);
-  const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef(null);
 
-  // Auto scroll to the bottom when new messages are added
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
+  const [inputValue, setInputValue] = useState("");
 
-  const handleSend = () => {
-    if (!input.trim() || isTyping) return;
+  const handleSendMessage = () => {
+    if (inputValue.trim()) {
+      setMessages([...messages, { text: inputValue, sender: "user" }]);
+      setInputValue("");
 
-    const userMsg = { from: "user", text: input };
-    setMessages((prev) => [...prev, userMsg]);
-    setInput("");
-
-    // Simulate a bot response with typing indicator
-    setIsTyping(true);
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          from: "bot",
-          text: `Terima kasih sudah bertanya, kamu menanyakan: "${userMsg.text}" 👍. Saat ini saya masih dalam pengembangan.`,
-        },
-      ]);
-      setIsTyping(false);
-    }, 1500); // 1.5 second delay
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleSend();
+      // coba respon bot
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: "Terima kasih atas pertanyaannya. Saya akan membantu Anda mencari informasi yang diperlukan.",
+            sender: "bot",
+          },
+        ]);
+      }, 1000);
     }
   };
 
   return (
-    <Paper
-      elevation={6}
-      sx={{
-        width: { xs: "95%", sm: 400 },
-        height: 500,
-        display: "flex",
-        flexDirection: "column",
-        borderRadius: 3,
-        overflow: "hidden",
-      }}
-    >
-      {/* Header */}
-      <Box
-        sx={{
-          bgcolor: "primary.main",
-          color: "primary.contrastText",
-          p: 2,
-          display: "flex",
-          alignItems: "center",
-          gap: 1,
-        }}
-      >
-        <SmartToyIcon />
-        <Typography variant="h6" component="div">
-          EduBot
-        </Typography>
-      </Box>
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold", mb: 3 }}>
+        EduBot AI Assistant
+      </Typography>
 
-      {/* Chat Area */}
-      <Box
+      <Card
         sx={{
-          flex: 1,
-          overflowY: "auto",
-          p: 2,
-          bgcolor: "#f2f7fa",
+          flexGrow: 1,
           display: "flex",
           flexDirection: "column",
-          gap: 1.5,
+          p: 5,
+          borderRadius: 3,
         }}
       >
-        {messages.map((msg, i) => (
-          <Fade in={true} key={i}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "flex-end",
-                justifyContent: msg.from === "user" ? "flex-end" : "flex-start",
-                gap: 1,
-              }}
-            >
-              {msg.from === "bot" && (
-                <Avatar sx={{ bgcolor: "primary.main" }}>
-                  <SmartToyIcon />
-                </Avatar>
-              )}
-              <Paper
-                sx={{
-                  maxWidth: "80%",
-                  p: 1.5,
-                  borderRadius: msg.from === "user" ? "15px 15px 4px 15px" : "15px 15px 15px 4px",
-                  bgcolor: msg.from === "user" ? "primary.light" : "grey.200",
-                  color: msg.from === "user" ? "white" : "black",
-                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <Typography variant="body2">{msg.text}</Typography>
-              </Paper>
-              {msg.from === "user" && (
-                <Avatar sx={{ bgcolor: "secondary.main" }}>
-                  <AccountCircleIcon />
-                </Avatar>
-              )}
-            </Box>
-          </Fade>
-        ))}
-
-        {/* Typing indicator */}
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            gap: 1,
-            opacity: isTyping ? 1 : 0,
-            transition: "opacity 0.3s",
+            flexGrow: 1,
+            overflow: "auto",
+            mb: 2,
+            p: 3,
+            backgroundColor: "background.default",
+            borderRadius: 2,
+            minHeight: 400,
           }}
         >
-          <Avatar sx={{ bgcolor: "primary.main" }}>
-            <SmartToyIcon />
-          </Avatar>
-          <Paper sx={{ p: 1.5, borderRadius: "15px 15px 15px 4px", bgcolor: "grey.200" }}>
-            <CircularProgress size={16} />
-          </Paper>
+          {messages.map((msg, index) => (
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
+                mb: 2,
+              }}
+            >
+              <Paper
+                sx={{
+                  p: 2,
+                  maxWidth: "70%",
+                  backgroundColor:
+                    msg.sender === "user"
+                      ? theme.palette.primary.main
+                      : theme.palette.mode === "dark"
+                      ? "#435b88ff"
+                      : theme.palette.common.white,
+                  color:
+                    msg.sender === "user"
+                      ? theme.palette.primary.contrastText
+                      : theme.palette.mode === "dark"
+                      ? theme.palette.common.white
+                      : theme.palette.text.primary,
+                  borderRadius: 3,
+                  boxShadow: "0px 2px 9px rgba(0,0,0,0.15)",
+                }}
+              >
+                <Typography variant="body1">{msg.text}</Typography>
+              </Paper>
+            </Box>
+          ))}
         </Box>
 
-        <div ref={messagesEndRef} />
-      </Box>
-
-      {/* Input Area */}
-      <Box sx={{ p: 2, borderTop: "1px solid", borderColor: "divider" }}>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Box sx={{ display: "flex" }}>
           <TextField
-            size="small"
             fullWidth
-            multiline
-            maxRows={4}
+            variant="outlined"
             placeholder="Tulis pesan..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            sx={{ flex: 1 }}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "50px",
+                "& fieldset": {
+                  borderColor:
+                    theme.palette.mode === "dark"
+                      ? "#061829ff"
+                      : theme.palette.primary.main,
+                  transition: "border-color 0.3s ease",
+                },
+                "&:hover fieldset": {
+                  borderColor: theme.palette.primary.main,
+                },
+              },
+            }}
           />
-          <IconButton
-            color="primary"
-            onClick={handleSend}
-            disabled={!input.trim() || isTyping}
+          <Button
+            variant="contained"
+            sx={{
+              ml: 1,
+              textTransform: "none",
+              borderRadius: "50px",
+              px: 3,
+              "&:focus": { outline: "none" },
+              "&:focusVisible": { outline: "none" },
+            }}
+            onClick={handleSendMessage}
           >
-            <SendIcon />
-          </IconButton>
-        </Stack>
-      </Box>
-    </Paper>
+            Kirim
+          </Button>
+        </Box>
+      </Card>
+    </Box>
   );
 }
+
+export default Chatbot;
