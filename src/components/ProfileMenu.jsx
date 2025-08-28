@@ -32,7 +32,10 @@ export default function ProfileMenu() {
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center", ml: 2 }}>
-        <IconButton onClick={handleClick} size="small">
+        <IconButton onClick={handleClick} size="small" sx={{
+          "&:focus": { outline: "none", },
+          "&:focusVisible": { outline: "none", },
+        }}>
           <Avatar
             sx={{
               width: 32,

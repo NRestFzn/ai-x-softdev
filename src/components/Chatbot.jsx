@@ -1,126 +1,167 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Typography,
+  Button,
   Card,
   Paper,
   TextField,
-  Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 function Chatbot() {
   const theme = useTheme();
   const [messages, setMessages] = useState([
-    {
-      text: "Halo! Saya EduBot. Ada yang ingin kamu tanyakan?",
-      sender: "bot",
-    },
+    { text: "Halo! Saya EduBot. Ada yang ingin kamu tanyakan?", sender: "bot" }
   ]);
 
   const [inputValue, setInputValue] = useState("");
+  const messagesEndRef = useRef(null);
 
-  const handleSendMessage = () => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("error");
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSendMessage = async () => {
     if (inputValue.trim()) {
       setMessages([...messages, { text: inputValue, sender: "user" }]);
+      const userMessage = inputValue;
       setInputValue("");
 
-      // coba respon bot
-      setTimeout(() => {
+      try {
+        const res = await fetch("http://localhost:5000/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: userMessage }),
+        });
+
+        const data = await res.json();
+
+        if (res.status === 429) {
+          setSnackbarMessage(data.error);
+          setSnackbarSeverity("warning");
+          setSnackbarOpen(true);
+          return;
+        }
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Terjadi kesalahan pada server.');
+        }
+
         setMessages((prev) => [
           ...prev,
-          {
-            text: "Terima kasih atas pertanyaannya. Saya akan membantu Anda mencari informasi yang diperlukan.",
-            sender: "bot",
-          },
+          { text: data.answer, sender: "bot" }
         ]);
-      }, 1000);
+
+      } catch (error) {
+        console.error(error);
+        setSnackbarMessage(error.message);
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        setMessages((prev) => [
+          ...prev,
+          { text: "Terjadi kesalahan saat menghubungi server.", sender: "bot" }
+        ]);
+      }
     }
   };
 
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+
   return (
-    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold", mb: 3 }}>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
         EduBot AI Assistant
       </Typography>
 
-      <Card
-        sx={{
+      <Card sx={{ border: "none", flexGrow: 1, display: 'flex', flexDirection: 'column', p: 5, borderRadius: 3 }}>
+        <Box sx={{
           flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          p: 5,
-          borderRadius: 3,
-        }}
-      >
-        <Box
-          sx={{
+          overflow: 'auto',
+          mb: 2,
+          p: 3,
+          backgroundColor: 'background.default',
+          borderRadius: 2,
+          height: 'calc(100vh - 300px)',
+          maxHeight: '560px',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          <Box sx={{
             flexGrow: 1,
-            overflow: "auto",
-            mb: 2,
-            p: 3,
-            backgroundColor: "background.default",
-            borderRadius: 2,
-            minHeight: 400,
-          }}
-        >
-          {messages.map((msg, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: "flex",
-                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
-                mb: 2,
-              }}
-            >
-              <Paper
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2
+          }}>
+            {messages.map((msg, index) => (
+              <Box
+                key={index}
                 sx={{
-                  p: 2,
-                  maxWidth: "70%",
-                  backgroundColor:
-                    msg.sender === "user"
-                      ? theme.palette.primary.main
-                      : theme.palette.mode === "dark"
-                      ? "#435b88ff"
-                      : theme.palette.common.white,
-                  color:
-                    msg.sender === "user"
-                      ? theme.palette.primary.contrastText
-                      : theme.palette.mode === "dark"
-                      ? theme.palette.common.white
-                      : theme.palette.text.primary,
-                  borderRadius: 3,
-                  boxShadow: "0px 2px 9px rgba(0,0,0,0.15)",
+                  display: 'flex',
+                  justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start',
                 }}
               >
-                <Typography variant="body1">{msg.text}</Typography>
-              </Paper>
-            </Box>
-          ))}
+                <Paper
+                  sx={{
+                    p: 2,
+                    maxWidth: '70%',
+                    backgroundColor: msg.sender === 'user'
+                      ? theme.palette.primary.main
+                      : theme.palette.mode === 'dark'
+                        ? "#435b88ff"
+                        : theme.palette.common.white,
+                    color: msg.sender === 'user'
+                      ? theme.palette.primary.contrastText
+                      : theme.palette.mode === 'dark'
+                        ? theme.palette.common.white
+                        : theme.palette.text.primary,
+                    borderRadius: 3,
+                    boxShadow: "0px 2px 9px rgba(0,0,0,0.15)",
+                  }}
+                >
+                  <Typography variant="body1">{msg.text}</Typography>
+                </Paper>
+              </Box>
+            ))}
+            <div ref={messagesEndRef} />
+          </Box>
         </Box>
 
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: 'flex' }}>
           <TextField
             fullWidth
             variant="outlined"
             placeholder="Tulis pesan..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
             sx={{
               "& .MuiOutlinedInput-root": {
                 borderRadius: "50px",
                 "& fieldset": {
-                  borderColor:
-                    theme.palette.mode === "dark"
-                      ? "#061829ff"
-                      : theme.palette.primary.main,
+                  borderColor: theme.palette.mode === "dark" ? "#061829ff" : theme.palette.primary.main,
                   transition: "border-color 0.3s ease",
                 },
                 "&:hover fieldset": {
                   borderColor: theme.palette.primary.main,
-                },
-              },
+                }
+              }
             }}
           />
           <Button
@@ -139,6 +180,16 @@ function Chatbot() {
           </Button>
         </Box>
       </Card>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
