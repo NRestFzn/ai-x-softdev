@@ -73,9 +73,6 @@ function Chatbot() {
 
   return (
     <Box sx={{height: '100%', display: 'flex', flexDirection: 'column'}}>
-      <Typography variant="h4" gutterBottom sx={{fontWeight: 'bold', mb: 3}}>
-        EduBot AI Assistant
-      </Typography>
 
       <Card
         sx={{
@@ -96,7 +93,7 @@ function Chatbot() {
             backgroundColor: 'background.default',
             borderRadius: 2,
             height: 'calc(100vh - 300px)',
-            maxHeight: '560px',
+            maxHeight: '630px',
             display: 'flex',
             flexDirection: 'column',
           }}

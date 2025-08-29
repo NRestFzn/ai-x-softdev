@@ -209,7 +209,7 @@ export default function MainLayout({darkMode, setDarkMode}) {
   const getPageTitle = () => {
     if (location.pathname === "/dashboard") return "Dashboard";
     if (location.pathname === "/settings") return "Settings";
-    return "Chatbot AI"; // Default title
+    return "EduBot AI Assistant"; // Default title
   };
 
   const handleMenuClick = () => {
