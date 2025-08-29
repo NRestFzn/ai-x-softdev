@@ -5,7 +5,7 @@ import express, { Request, Response } from 'express'
 
 const route = express.Router()
 
-route.get(
+route.post(
   '/public-ask',
   asyncHandler(async (req: Request, res: Response) => {
     const formData = req.getBody()

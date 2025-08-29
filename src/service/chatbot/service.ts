@@ -1,10 +1,7 @@
 import { EduBotSystemPrompt } from '@/libs/constant/systemPromptTemplate'
 import axios from 'axios'
 import { GeminiApiResponseDto } from './dto'
-
-const GEMINI_API_KEY = 'AIzaSyD9dlNLlWXGCRPneHYkbbckKw0NltwQwSQ'
-const GEMINI_API_URL =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+import { env } from '@/config/env.config'
 
 class ChatBotService {
   async publicAsk(question: string): Promise<GeminiApiResponseDto | null> {
@@ -36,7 +33,7 @@ class ChatBotService {
     }
 
     const axiosFetch = await axios.post(
-      `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
+      `${env.GEMINI_API_URL}?key=${env.GEMINI_API_KEY}`,
       requestBody
     )
 

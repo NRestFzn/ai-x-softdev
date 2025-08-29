@@ -15,7 +15,7 @@ import expressRateLimit from '@/middleware/expressRateLimit'
 import expressWithState from '@/middleware/expressWithState'
 import expressErrorHandle from '@/middleware/expressErrorHandler'
 import express, { Application, Request, Response } from 'express'
-import expressErrorValidation from '@/src/middleware/expressYupHandler'
+import expressErrorValidation from '@/middleware/expressYupHandler'
 import expressGeminiHandler from '../middleware/expressGeminiHandler'
 
 export class App {
@@ -35,7 +35,7 @@ export class App {
     this._app.use(compression())
     this._app.use(cookieParser())
     this._app.use(helmet())
-    this._app.use(cors({ origin: allowedCors }))
+    this._app.use(cors())
     this._app.use(hpp())
     this._app.use(requestIp.mw())
     this._app.use(userAgent.express())

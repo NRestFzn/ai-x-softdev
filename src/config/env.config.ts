@@ -21,6 +21,9 @@ export const env = {
   FIRESTORE_CERT_CLIENT: process.env.FIRESTORE_CERT_CLIENT,
   FIRESTORE_UNIVERSE_DOMAIN: process.env.FIRESTORE_UNIVERSE_DOMAIN,
 
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+  GEMINI_API_URL: process.env.GEMINI_API_URL,
+
   JWT_SECRET: process.env.JWT_SECRET || 'your_secret_key',
   JWT_EXPIRES: process.env.JWT_EXPIRES || '7d',
 }
