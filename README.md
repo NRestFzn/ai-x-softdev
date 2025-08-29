@@ -65,6 +65,7 @@ cd backend
 - build the app first with "npm run build"
 - run "npm run generate:secret" for jwt secret
 - get Gemini API key from aistudio.google.com
+- run "npm run start:prod" to run the project or "npm run watch:dev"
 
 ```
 
