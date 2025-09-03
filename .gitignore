@@ -12,10 +12,15 @@ dist
 dist-ssr
 *.local
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 /.env
 /package-lock.json
 >>>>>>> 5c06f2bc5e64e9ecfa1e63870ae8d86da02e7a10
+=======
+/.env
+/package-lock.json
+>>>>>>> 18b9d6efa1418498d9a0c114b37d24053377a91b
 
 # Editor directories and files
 .vscode/*
