@@ -1,4 +1,5 @@
 import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Button,
@@ -8,15 +9,17 @@ import {
   Paper,
   TextField,
   Typography,
+  Fab,
+  Link
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff, DarkMode, LightMode } from "@mui/icons-material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import GoogleIcon from "@mui/icons-material/Google";
 import { motion } from "framer-motion";
 
-export default function LoginPage() {
+export default function Login({ darkMode, setDarkMode }) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   return (
@@ -26,7 +29,7 @@ export default function LoginPage() {
         height: "100vh",
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
-        backgroundColor: "#f8f9fa", // background netral terang
+        bgcolor: "background.default", // ikut theme global
       }}
     >
       {/* Left Section */}
@@ -41,16 +44,24 @@ export default function LoginPage() {
         }}
       >
         <Box sx={{ textAlign: { xs: "center", md: "left" }, maxWidth: 500 }}>
-          <Typography variant="h4" fontWeight="bold" sx={{ mb: 2 }}>
+          <Typography
+            variant="h4"
+            fontWeight="bold"
+            color="text.primary"
+            sx={{ mb: 2 }}
+          >
             Selamat Datang
           </Typography>
-          <Typography variant="body1" sx={{ lineHeight: 1.6, color: "text.secondary" }}>
+          <Typography
+            variant="body1"
+            sx={{ lineHeight: 1.6, color: "text.secondary" }}
+          >
             Belajar lebih menyenangkan dengan <b>EDULEARN</b>. Tingkatkan
             keterampilanmu dengan dukungan AI.
           </Typography>
         </Box>
       </Box>
-
+      
       {/* Right Section */}
       <Box
         sx={{
@@ -74,7 +85,7 @@ export default function LoginPage() {
               width: "100%",
               maxWidth: 380,
               textAlign: "center",
-              backgroundColor: "white",
+              bgcolor: "background.paper",
             }}
           >
             <Box sx={{ mb: 3 }}>
@@ -97,7 +108,7 @@ export default function LoginPage() {
               <TextField
                 fullWidth
                 margin="normal"
-                label="Nama Lengkap"
+                label="Username/Email"
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
@@ -106,19 +117,10 @@ export default function LoginPage() {
                     </InputAdornment>
                   ),
                 }}
-              />
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Alamat Email"
-                variant="outlined"
-                type="email"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailOutlinedIcon />
-                    </InputAdornment>
-                  ),
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 3,
+                  },
                 }}
               />
               <TextField
@@ -135,16 +137,23 @@ export default function LoginPage() {
                   ),
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
+                      <IconButton onClick={() => setShowPassword(!showPassword)} sx={{
+                        "&:focus": { outline: "none" },
+                        "&:focusVisible": { outline: "none" },
+                      }}>
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   ),
                 }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 3,
+                  },
+                }}
               />
 
+              {/* Tombol MASUK */}
               <Button
                 fullWidth
                 variant="contained"
@@ -155,10 +164,12 @@ export default function LoginPage() {
                   py: 1.2,
                   fontSize: "1rem",
                   fontWeight: "bold",
-                  backgroundColor: "#1976d2", // biru modern
+                  backgroundColor: (theme) => theme.palette.primary.main,
                   "&:hover": {
-                    backgroundColor: "#1565c0",
+                    backgroundColor: (theme) => theme.palette.primary.dark,
                   },
+                  "&:focus": { outline: "none" },
+                  "&:focusVisible": { outline: "none" },
                 }}
               >
                 MASUK
@@ -166,6 +177,7 @@ export default function LoginPage() {
 
               <Divider sx={{ my: 3 }}>atau</Divider>
 
+              {/* Tombol Google */}
               <Button
                 fullWidth
                 variant="outlined"
@@ -175,17 +187,60 @@ export default function LoginPage() {
                   textTransform: "none",
                   py: 1.2,
                   fontSize: "1rem",
+                  color: (theme) => theme.palette.primary.main,
+                  borderColor: (theme) => theme.palette.primary.main,
                   "&:hover": {
-                    backgroundColor: "#f5f5f5",
+                    borderColor: (theme) => theme.palette.primary.dark,
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === "dark"
+                        ? "rgba(107,124,255,0.1)"
+                        : "rgba(63,81,181,0.1)",
+                    "&:focus": { outline: "none" },
+                    "&:focusVisible": { outline: "none" },
                   },
                 }}
               >
                 Masuk dengan Google
               </Button>
+              <Typography sx={{ marginTop: 4 }}>Belum memiliki akun? <Link
+                component={RouterLink}
+                to="/register"
+                underline="hover"
+                sx={{
+                  color: (theme) => theme.palette.primary.main, 
+                  fontWeight: "bold",
+                  transition: "color 0.2s ease-in-out",
+                  "&:hover": {
+                    color: (theme) =>
+                      theme.palette.mode === "dark"
+                        ? theme.palette.primary.light 
+                        : theme.palette.primary.dark, 
+                  },
+                }}
+              >
+                Daftar
+              </Link></Typography>
             </Box>
           </Paper>
         </motion.div>
       </Box>
+
+      {/* FAB Trigger Dark/Light */}
+      <Fab
+        color="primary"
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+          transition: "all 0.3s ease-in-out",
+          zIndex: 1400,
+          "&:focus": { outline: "none" },
+          "&:focusVisible": { outline: "none" },
+        }}
+        onClick={() => setDarkMode(!darkMode)}
+      >
+        {darkMode ? <LightMode /> : <DarkMode />}
+      </Fab>
     </Box>
   );
 }

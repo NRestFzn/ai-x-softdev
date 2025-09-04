@@ -6,6 +6,7 @@ import Chatbot from "./components/Chatbot";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import { getDesignTokens } from "./utils/theme";
 
 function App() {
@@ -25,11 +26,11 @@ function App() {
   if (isLoading) {
     return (
       <ThemeProvider theme={muiTheme}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh' 
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh'
         }}>
           <div>Loading...</div>
         </div>
@@ -41,16 +42,20 @@ function App() {
     <ThemeProvider theme={muiTheme}>
       <Routes>
         {/* Route untuk login - hanya bisa diakses jika belum login */}
-        <Route 
-          path="/login" 
+        <Route
+          path="/login"
           element={
-            isLoggedIn ? <Navigate to="/dashboard" replace /> : <Login />
-          } 
+            isLoggedIn ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Login darkMode={darkMode} setDarkMode={setDarkMode} />
+            )
+          }
         />
-        
+
         {/* Route yang dilindungi - hanya bisa diakses jika sudah login */}
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
             isLoggedIn ? (
               <MainLayout darkMode={darkMode} setDarkMode={setDarkMode} />
@@ -64,7 +69,20 @@ function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="chatbot" element={<Chatbot />} />
         </Route>
-        
+
+
+        {/* regis*/}
+        <Route
+          path="/register"
+          element={
+            isLoggedIn ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Register darkMode={darkMode} setDarkMode={setDarkMode} />
+            )
+          }
+        />
+
         {/* Redirect untuk path yang tidak dikenal */}
         <Route path="*" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} replace />} />
       </Routes>
