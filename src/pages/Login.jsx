@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
@@ -13,7 +14,6 @@ import {
   Link
 } from "@mui/material";
 import { Visibility, VisibilityOff, DarkMode, LightMode } from "@mui/icons-material";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -21,6 +21,28 @@ import { motion } from "framer-motion";
 
 export default function Login({ darkMode, setDarkMode }) {
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const formVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1,
+        },
+    },
+  };
+
+  const formItemVariants = {
+      hidden: { y: 20, opacity: 0 },
+      visible: {
+          y: 0,
+          opacity: 1,
+          transition: {
+              duration: 0.4,
+              ease: "easeOut",
+          },
+      },
+  };
 
   return (
     <Box
@@ -50,7 +72,7 @@ export default function Login({ darkMode, setDarkMode }) {
             color="text.primary"
             sx={{ mb: 2 }}
           >
-            Selamat Datang
+            Selamat Datang Kembali
           </Typography>
           <Typography
             variant="body1"
@@ -104,123 +126,146 @@ export default function Login({ darkMode, setDarkMode }) {
             </Box>
 
             {/* Form */}
-            <Box component="form">
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Username/Email"
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PersonOutlineIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 3,
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Password"
-                variant="outlined"
-                type={showPassword ? "text" : "password"}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockOutlinedIcon />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={() => setShowPassword(!showPassword)} sx={{
-                        "&:focus": { outline: "none" },
-                        "&:focusVisible": { outline: "none" },
-                      }}>
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 3,
-                  },
-                }}
-              />
+            <motion.div
+                variants={formVariants}
+                initial="hidden"
+                animate="visible"
+            >
+                <Box component="form">
+                    <motion.div variants={formItemVariants}>
+                        <TextField
+                            fullWidth
+                            margin="normal"
+                            label="Email"
+                            variant="outlined"
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <EmailOutlinedIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                            sx={{
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: 3,
+                                },
+                            }}
+                        />
+                    </motion.div>
+                    <motion.div variants={formItemVariants}>
+                        <TextField
+                            fullWidth
+                            margin="normal"
+                            label="Password"
+                            variant="outlined"
+                            type={showPassword ? "text" : "password"}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <LockOutlinedIcon />
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => setShowPassword(!showPassword)} sx={{
+                                            "&:focus": { outline: "none" },
+                                            "&:focusVisible": { outline: "none" },
+                                        }}>
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                            sx={{
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: 3,
+                                },
+                            }}
+                        />
+                    </motion.div>
 
-              {/* Tombol MASUK */}
-              <Button
-                fullWidth
-                variant="contained"
-                size="large"
-                sx={{
-                  mt: 3,
-                  borderRadius: 3,
-                  py: 1.2,
-                  fontSize: "1rem",
-                  fontWeight: "bold",
-                  backgroundColor: (theme) => theme.palette.primary.main,
-                  "&:hover": {
-                    backgroundColor: (theme) => theme.palette.primary.dark,
-                  },
-                  "&:focus": { outline: "none" },
-                  "&:focusVisible": { outline: "none" },
-                }}
-              >
-                MASUK
-              </Button>
+                    {/* Tombol MASUK */}
+                    <motion.div
+                        variants={formItemVariants}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            size="large"
+                            sx={{
+                                mt: 3,
+                                borderRadius: 3,
+                                py: 1.2,
+                                fontSize: "1rem",
+                                fontWeight: "bold",
+                                color: "white",
+                                background: "linear-gradient(to right, #5B7EA4, #345B82)",
+                                "&:hover": {
+                                    background: "linear-gradient(to right, #5B7EA4, #345B82)",
+                                    filter: "brightness(0.9)",
+                                },
+                                "&:focus": { outline: "none" },
+                                "&:focusVisible": { outline: "none" },
+                            }}
+                        >
+                            Masuk
+                        </Button>
+                    </motion.div>
 
-              <Divider sx={{ my: 3 }}>atau</Divider>
+                    <Divider sx={{ my: 3 }}>atau</Divider>
 
-              {/* Tombol Google */}
-              <Button
-                fullWidth
-                variant="outlined"
-                startIcon={<GoogleIcon />}
-                sx={{
-                  borderRadius: 3,
-                  textTransform: "none",
-                  py: 1.2,
-                  fontSize: "1rem",
-                  color: (theme) => theme.palette.primary.main,
-                  borderColor: (theme) => theme.palette.primary.main,
-                  "&:hover": {
-                    borderColor: (theme) => theme.palette.primary.dark,
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === "dark"
-                        ? "rgba(107,124,255,0.1)"
-                        : "rgba(63,81,181,0.1)",
-                    "&:focus": { outline: "none" },
-                    "&:focusVisible": { outline: "none" },
-                  },
-                }}
-              >
-                Masuk dengan Google
-              </Button>
-              <Typography sx={{ marginTop: 4 }}>Belum memiliki akun? <Link
-                component={RouterLink}
-                to="/register"
-                underline="hover"
-                sx={{
-                  color: (theme) => theme.palette.primary.main, 
-                  fontWeight: "bold",
-                  transition: "color 0.2s ease-in-out",
-                  "&:hover": {
-                    color: (theme) =>
-                      theme.palette.mode === "dark"
-                        ? theme.palette.primary.light 
-                        : theme.palette.primary.dark, 
-                  },
-                }}
-              >
-                Daftar
-              </Link></Typography>
-            </Box>
+                    {/* Tombol Google */}
+                    <motion.div
+                        variants={formItemVariants}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        <Button
+                            fullWidth
+                            variant="outlined"
+                            startIcon={<GoogleIcon />}
+                            sx={{
+                                borderRadius: 3,
+                                textTransform: "none",
+                                py: 1.2,
+                                fontSize: "1rem",
+                                color: (theme) => theme.palette.primary.main,
+                                borderColor: (theme) => theme.palette.primary.main,
+                                "&:hover": {
+                                    borderColor: (theme) => theme.palette.primary.dark,
+                                    backgroundColor: (theme) =>
+                                        theme.palette.mode === "dark"
+                                            ? "rgba(107,124,255,0.1)"
+                                            : "rgba(63,81,181,0.1)",
+                                    "&:focus": { outline: "none" },
+                                    "&:focusVisible": { outline: "none" },
+                                },
+                            }}
+                        >
+                            Masuk dengan Google
+                        </Button>
+                    </motion.div>
+                    <Typography sx={{ marginTop: 4 }}>Belum punya akun? <Link
+                        component={RouterLink}
+                        to="/register"
+                        underline="hover"
+                        sx={{
+                            fontWeight: "bold",
+                            background: "linear-gradient(to right, #5B7EA4, #345B82)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            transition: "filter 0.2s ease-in-out",
+                            "&:hover": {
+                                filter: "brightness(0.8)",
+                            },
+                        }}
+                    >
+                        Daftar
+                    </Link></Typography>
+                </Box>
+            </motion.div>
           </Paper>
         </motion.div>
       </Box>
