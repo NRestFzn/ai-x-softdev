@@ -8,15 +8,22 @@ const route = express.Router()
 
 route.post(
   '/signup',
-  asyncHandler(async (req: Request, res: Response) => {
-    const formData = req.getBody()
-
-    const values = registerSchema.validateSync(formData)
+  asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    let values
+    try {
+      values = registerSchema.validateSync(req.body)
+    } catch (schemaError: any) {
+      res.status(422).json({
+        success: false,
+        message: 'Kesalahan validasi: ' + schemaError.message,
+      })
+      return
+    }
 
     const data = await authService.signUp({ ...values })
 
     const httpResponse = HttpResponse.created({
-      message: 'User registered successfully',
+      message: 'Pengguna berhasil terdaftar',
       data,
     })
 
@@ -27,14 +34,12 @@ route.post(
 route.post(
   '/signin',
   asyncHandler(async (req: Request, res: Response) => {
-    const formData = req.getBody()
-
-    const values = loginSchema.validateSync(formData)
+    const values = loginSchema.validateSync(req.body)
 
     const data = await authService.signIn(values)
 
     const httpResponse = HttpResponse.get({
-      message: 'Login successfully',
+      message: 'Login berhasil',
       data,
     })
 

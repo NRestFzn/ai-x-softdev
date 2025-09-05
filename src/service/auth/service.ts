@@ -12,89 +12,100 @@ const jwt = new JwtToken({ secret: env.JWT_SECRET, expires: env.JWT_EXPIRES })
 
 class AuthService {
   async signIn(formData: LoginDto): Promise<AuthResponseDto> {
-    const userCollection = db.collection('users')
+    try {
+      const userCollection = db.collection('users')
+      const getUser = await userCollection.where('email', '==', formData.email).get()
 
-    const getUser = await userCollection
-      .where('email', '==', formData.email)
-      .get()
+      if (getUser.empty) {
+        throw new ErrorResponse.NotFound('Login gagal, email atau password salah')
+      }
 
-    console.log(formData.email)
-    console.log(formData.password)
+      const userData = getUser.docs[0].data() as UserWithPasswordDto
 
-    if (getUser.empty) {
-      throw new ErrorResponse.NotFound('Login failed, invalid credentials')
+      const hashPassword = new Hashing()
+      const validatePassword = await hashPassword.verify(userData.password, formData.password)
+
+      if (!validatePassword) {
+        throw new ErrorResponse.NotFound('Login gagal, email atau password salah')
+      }
+
+      const payload = { uid: userData.id }
+      const { token, expiresIn } = jwt.generate(payload)
+
+      const data = {
+        id: userData.id,
+        fullname: userData.fullname,
+        email: userData.email,
+        accessToken: token,
+        expiresAt: new Date(Date.now() + expiresIn * 1000),
+        expiresIn,
+      }
+
+      return data
+    } catch (error) {
+      throw error
     }
-
-    const userData = getUser.docs[0].data() as UserWithPasswordDto
-
-    const hashPassword = new Hashing()
-
-    const validatePassword = await hashPassword.verify(
-      userData.password,
-      formData.password
-    )
-
-    if (!validatePassword) {
-      throw new ErrorResponse.NotFound('Login failed, invalid credentials')
-    }
-
-    const payload = JSON.parse(JSON.stringify({ uid: userData.id }))
-
-    const { token, expiresIn } = jwt.generate(payload)
-
-    const data = {
-      id: userData.id,
-      fullname: userData.fullname,
-      email: userData.email,
-      accessToken: token,
-      expiresAt: new Date(Date.now() + expiresIn * 1000),
-      expiresIn: expiresIn,
-    }
-
-    return data
   }
 
   async signUp(formData: RegisterDto): Promise<AuthResponseDto> {
-    const userCollection = db.collection('users')
+    try {
+      if (!formData.fullname || !formData.email || !formData.password) {
+        throw new ErrorResponse.BaseResponse(
+          'Semua field wajib diisi',
+          'BAD_REQUEST',
+          StatusCodes.BAD_REQUEST
+        )
+      }
 
-    const duplicateEmail = await userCollection
-      .where('email', '==', formData.email)
-      .get()
+      const userCollection = db.collection('users')
 
-    if (!duplicateEmail.empty) {
-      throw new ErrorResponse.BaseResponse(
-        'Email already used',
-        'CONFLICT',
-        StatusCodes.CONFLICT
-      )
+      const duplicateEmail = await userCollection.where('email', '==', formData.email).get()
+      if (!duplicateEmail.empty) {
+        throw new ErrorResponse.BaseResponse(
+          'Email sudah terdaftar',
+          'CONFLICT',
+          StatusCodes.CONFLICT
+        )
+      }
+      
+      const userId = v4()
+
+      const hashPassword = new Hashing()
+      const hashedPassword = await hashPassword.hash(formData.password)
+
+      const userData = {
+        id: userId,
+        fullname: formData.fullname,
+        email: formData.email,
+        password: hashedPassword,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+
+      await userCollection.doc(userId).set(userData)
+
+      const getUser = await userCollection.where('email', '==', formData.email).get()
+      if (getUser.empty) {
+        throw new ErrorResponse.BaseResponse(
+          'Gagal membuat pengguna',
+          'INTERNAL_SERVER_ERROR',
+          StatusCodes.INTERNAL_SERVER_ERROR
+        )
+      }
+
+      const retrievedUserData = getUser.docs[0].data() as UserWithPasswordDto
+
+      const authResponse = await this.signIn({
+        email: retrievedUserData.email,
+        password: formData.password,
+      })
+
+      return authResponse
+    } catch (error) {
+      throw error
     }
-
-    const userId = v4()
-
-    const hashPassword = new Hashing()
-
-    await userCollection.doc(userId).set({
-      id: userId,
-      fullname: formData.fullname,
-      email: formData.email,
-      password: await hashPassword.hash(formData.password),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    })
-
-    const getUser = await userCollection
-      .where('email', '==', formData.email)
-      .get()
-
-    const userData = getUser.docs[0].data() as UserWithPasswordDto
-
-    return await this.signIn({
-      email: userData.email,
-      password: formData.password,
-    })
   }
 }
 
 const authService = new AuthService()
-
 export default authService

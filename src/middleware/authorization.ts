@@ -6,9 +6,15 @@ import _ from 'lodash'
 
 const jwt = new JwtToken({ secret: env.JWT_SECRET, expires: env.JWT_EXPIRES })
 
+const publicRoutes = ['/v1/auth/signup', '/v1/auth/login']
+
 export default function authorization() {
   return asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
+      if (publicRoutes.includes(req.path)) {
+        return next()
+      }
+
       const token = jwt.extract(req)
       if (!token) {
         res.status(401).json({
