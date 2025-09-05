@@ -13,7 +13,7 @@ untuk soal latihan, AI nya juga dapat memberikan rekomendasi video dari youtube 
 | **Name**                   | **Role**     |
 | -------------------------- | ------------ |
 | Nashir Resta Fauzian       | Backend Dev  |
-| Muhammad Yudha Pratama     | Frontend Dev |
+| Muhammad Yudha Pratama     | Backend Dev |
 | Rafi Ikbar Fahrezy         | Frontend Dev |
 | Natanael Adrie Christiawan | Frontend Dev |
 
