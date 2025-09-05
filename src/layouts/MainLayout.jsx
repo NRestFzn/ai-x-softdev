@@ -36,7 +36,6 @@ function NavigationDrawer({ open, onClose, darkMode, setDarkMode, drawerOpen }) 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  // Placeholder for chat history
   const chatHistory = [
     { id: 1, title: "Percakapan 1" },
     { id: 2, title: "Percakapan 2" },
@@ -186,7 +185,7 @@ function NavigationDrawer({ open, onClose, darkMode, setDarkMode, drawerOpen }) 
   );
 }
 
-export default function MainLayout({darkMode, setDarkMode}) {
+export default function MainLayout({darkMode, setDarkMode, onLogout}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(true);
   const theme = useTheme();
@@ -202,21 +201,21 @@ export default function MainLayout({darkMode, setDarkMode}) {
       setDrawerOpen(false);
     } else {
       setDrawerOpen(true);
-      setMobileOpen(false); // Reset mobile drawer state when switching to desktop
+      setMobileOpen(false);
     }
   }, [isMobile]);
 
   const getPageTitle = () => {
     if (location.pathname === "/dashboard") return "Dashboard";
     if (location.pathname === "/settings") return "Settings";
-    return "EduBot AI Assistant"; // Default title
+    return "EduBot AI Assistant"; 
   };
 
   const handleMenuClick = () => {
     if (isMobile) {
-      handleDrawerToggle(); // Toggle mobile drawer
+      handleDrawerToggle();
     } else {
-      setDrawerOpen(!drawerOpen); // Toggle desktop drawer
+      setDrawerOpen(!drawerOpen);
     }
   };
 
@@ -278,7 +277,7 @@ export default function MainLayout({darkMode, setDarkMode}) {
               {getPageTitle()}
             </Typography>
 
-            <ProfileMenu />
+            <ProfileMenu onLogout={onLogout} />
           </Toolbar>
         </AppBar>
 

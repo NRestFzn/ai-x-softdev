@@ -20,9 +20,50 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import GoogleIcon from "@mui/icons-material/Google";
 import { motion } from "framer-motion";
 
-export default function Login({ darkMode, setDarkMode }) {
-    const [showPassword, setShowPassword] = React.useState(false);
+export default function Register({ darkMode, setDarkMode }) {
+    const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [fullname, setFullname] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+
+        if (password !== confirmPassword) {
+            alert("Password dan Konfirmasi Password tidak cocok.");
+            return;
+        }
+
+        const payload = { fullname, email, password };
+        console.log("Sending registration payload:", payload);
+        console.log("Payload size:", JSON.stringify(payload).length);
+
+        try {
+            const response = await fetch("http://localhost:8000/v1/auth/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ fullname, email, password }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                console.log("Pendaftaran berhasil!", result.data);
+                alert(result.message);
+                window.location.href = "/login";
+            } else {
+                console.error("Pendaftaran gagal:", result.message);
+                alert(result.message);
+            }
+        } catch (error) {
+            console.error("Terjadi kesalahan:", error);
+            alert("Terjadi kesalahan, coba lagi.");
+        }
+    };
 
     const formVariants = {
         hidden: { opacity: 0 },
@@ -53,10 +94,9 @@ export default function Login({ darkMode, setDarkMode }) {
                 height: "100vh",
                 display: "flex",
                 flexDirection: { xs: "column", md: "row" },
-                bgcolor: "background.default", // ikut theme global
+                bgcolor: "background.default",
             }}
         >
-            {/* Left Section */}
             <Box
                 sx={{
                     flex: 1,
@@ -86,7 +126,6 @@ export default function Login({ darkMode, setDarkMode }) {
                 </Box>
             </Box>
 
-            {/* Right Section */}
             <Box
                 sx={{
                     flex: 1,
@@ -127,19 +166,20 @@ export default function Login({ darkMode, setDarkMode }) {
                             </Typography>
                         </Box>
 
-                        {/* Form */}
                         <motion.div
                             variants={formVariants}
                             initial="hidden"
                             animate="visible"
                         >
-                            <Box component="form">
+                            <Box component="form" onSubmit={handleRegister}>
                                 <motion.div variants={formItemVariants}>
                                     <TextField
                                         fullWidth
                                         margin="normal"
                                         label="Full Name"
                                         variant="outlined"
+                                        value={fullname}
+                                        onChange={(e) => setFullname(e.target.value)}
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -160,6 +200,8 @@ export default function Login({ darkMode, setDarkMode }) {
                                         margin="normal"
                                         label="Email"
                                         variant="outlined"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -181,6 +223,8 @@ export default function Login({ darkMode, setDarkMode }) {
                                         label="Password"
                                         variant="outlined"
                                         type={showPassword ? "text" : "password"}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -212,6 +256,8 @@ export default function Login({ darkMode, setDarkMode }) {
                                         label="Konfirmasi Password"
                                         variant="outlined"
                                         type={showConfirmPassword ? "text" : "password"}
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -239,8 +285,6 @@ export default function Login({ darkMode, setDarkMode }) {
                                         }}
                                     />
                                 </motion.div>
-
-                                {/* Tombol MASUK */}
                                 <motion.div
                                     variants={formItemVariants}
                                     whileHover={{ scale: 1.03 }}
@@ -249,6 +293,7 @@ export default function Login({ darkMode, setDarkMode }) {
                                     <Button
                                         fullWidth
                                         variant="contained"
+                                        type="submit"
                                         size="large"
                                         sx={{
                                             mt: 3,
@@ -269,10 +314,7 @@ export default function Login({ darkMode, setDarkMode }) {
                                         Daftar
                                     </Button>
                                 </motion.div>
-
                                 <Divider sx={{ my: 3 }}>atau</Divider>
-
-                                {/* Tombol Google */}
                                 <motion.div
                                     variants={formItemVariants}
                                     whileHover={{ scale: 1.03 }}
@@ -303,30 +345,31 @@ export default function Login({ darkMode, setDarkMode }) {
                                         Daftar dengan Google
                                     </Button>
                                 </motion.div>
-                                <Typography sx={{ marginTop: 4 }}>Sudah memiliki akun? <Link
-                                    component={RouterLink}
-                                    to="/login"
-                                    underline="hover"
-                                    sx={{
-                                        fontWeight: "bold",
-                                        background: "linear-gradient(to right, #5B7EA4, #345B82)",
-                                        WebkitBackgroundClip: "text",
-                                        WebkitTextFillColor: "transparent",
-                                        transition: "filter 0.2s ease-in-out",
-                                        "&:hover": {
-                                            filter: "brightness(0.8)",
-                                        },
-                                    }}
-                                >
-                                    Masuk
-                                </Link></Typography>
+                                <Typography sx={{ marginTop: 4 }}>
+                                    Sudah memiliki akun?{" "}
+                                    <Link
+                                        component={RouterLink}
+                                        to="/login"
+                                        underline="hover"
+                                        sx={{
+                                            fontWeight: "bold",
+                                            background: "linear-gradient(to right, #5B7EA4, #345B82)",
+                                            WebkitBackgroundClip: "text",
+                                            WebkitTextFillColor: "transparent",
+                                            transition: "filter 0.2s ease-in-out",
+                                            "&:hover": {
+                                                filter: "brightness(0.8)",
+                                            },
+                                        }}
+                                    >
+                                        Masuk
+                                    </Link>
+                                </Typography>
                             </Box>
                         </motion.div>
                     </Paper>
                 </motion.div>
             </Box>
-
-            {/* FAB Trigger Dark/Light */}
             <Fab
                 color="primary"
                 sx={{

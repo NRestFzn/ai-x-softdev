@@ -17,7 +17,7 @@ import {
   Home as HomeIcon,
 } from "@mui/icons-material";
 
-export default function ProfileMenu() {
+export default function ProfileMenu({ onLogout }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -27,6 +27,11 @@ export default function ProfileMenu() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogoutClick = () => {
+    onLogout();
+    handleClose();
   };
 
   return (
@@ -55,7 +60,6 @@ export default function ProfileMenu() {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        onClick={handleClose}
         PaperProps={{
           elevation: 0,
           sx: {
@@ -85,25 +89,26 @@ export default function ProfileMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem component={Link} to="/">
+        <MenuItem component={Link} to="/" onClick={handleClose}>
           <ListItemIcon>
             <HomeIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Home</ListItemText>
         </MenuItem>
-        <MenuItem component={Link} to="/dashboard">
+        <MenuItem component={Link} to="/dashboard" onClick={handleClose}>
           <ListItemIcon>
             <DashboardIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Dashboard</ListItemText>
         </MenuItem>
-        <MenuItem component={Link} to="/settings">
+        <MenuItem component={Link} to="/settings" onClick={handleClose}>
           <ListItemIcon>
             <SettingsIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Settings</ListItemText>
         </MenuItem>
-        <MenuItem>
+        {/* 3. Tambahkan onClick di sini */}
+        <MenuItem onClick={handleLogoutClick}>
           <ListItemIcon>
             <ExitToAppIcon fontSize="small" />
           </ListItemIcon>

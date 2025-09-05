@@ -17,11 +17,22 @@ function App() {
   const muiTheme = createTheme(getDesignTokens(darkMode ? "dark" : "light"));
 
   useEffect(() => {
-    // Cek status login dari localStorage
-    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedIn);
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsLoggedIn(true);
+    }
     setIsLoading(false);
   }, []);
+
+  const handleLoginSuccess = (token) => {
+    localStorage.setItem("authToken", token);
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    setIsLoggedIn(false);
+  };
 
   if (isLoading) {
     return (
@@ -41,37 +52,41 @@ function App() {
   return (
     <ThemeProvider theme={muiTheme}>
       <Routes>
-        {/* Route untuk login - hanya bisa diakses jika belum login */}
         <Route
           path="/login"
           element={
             isLoggedIn ? (
               <Navigate to="/dashboard" replace />
             ) : (
-              <Login darkMode={darkMode} setDarkMode={setDarkMode} />
+              <Login
+                onLoginSuccess={handleLoginSuccess}
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
             )
           }
         />
 
-        {/* Route yang dilindungi - hanya bisa diakses jika sudah login */}
         <Route
           path="/"
           element={
             isLoggedIn ? (
-              <MainLayout darkMode={darkMode} setDarkMode={setDarkMode} />
+              <MainLayout
+                onLogout={handleLogout}
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
             ) : (
               <Navigate to="/login" replace />
             )
           }
         >
-          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route index element={<Chatbot />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="settings" element={<Settings />} />
           <Route path="chatbot" element={<Chatbot />} />
         </Route>
 
-
-        {/* regis*/}
         <Route
           path="/register"
           element={
@@ -83,7 +98,6 @@ function App() {
           }
         />
 
-        {/* Redirect untuk path yang tidak dikenal */}
         <Route path="*" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} replace />} />
       </Routes>
     </ThemeProvider>
