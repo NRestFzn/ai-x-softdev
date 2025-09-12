@@ -3,6 +3,7 @@ import { App } from './config/app.config'
 import { env } from './config/env.config'
 import { httpHandle } from './libs/http/handle'
 import { initConnection } from './config/firebase.config'
+import dataSource from './database/config'
 
 async function bootstrap() {
   const port = env.APP_PORT
@@ -11,6 +12,9 @@ async function bootstrap() {
 
   // initial database
   await initConnection()
+
+  //initial postgress database
+  await dataSource.initialize()
 
   // http handle
   const { onError, onListening } = httpHandle(server, port)
