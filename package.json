@@ -17,10 +17,14 @@
     "build": "rimraf dist && tsc && tsc-alias",
     "start:prod": "node dist/main.js",
     "watch:dev": "node --import=tsx --watch src/main.ts",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/database/config.ts",
-    "migrate": "npm run typeorm migration:run",
-    "migrate:generate": "sh -c 'npm run typeorm migration:generate src/database/migrations/$0'",
-    "migrate:revert": "npm run typeorm migration:revert"
+    "db:create": "sequelize-cli db:create",
+    "db:drop": "sequelize-cli db:drop",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:migrate:refresh": "sequelize-cli db:migrate:undo:all",
+    "db:seed": "sequelize-cli db:seed:all",
+    "db:reset": "npm-run-all db:drop db:create db:migrate db:seed",
+    "dev": "ts-node src/main.ts",
+    "start": "node dist/main.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -63,7 +67,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash": "^4.17.20",
     "@types/multer": "^2.0.0",
-    "@types/pdf-parse": "^1.1.5",
+    "@types/node": "^24.3.0",
     "@types/request-ip": "^0.0.41",
     "colorette": "^2.0.20",
     "concurrently": "^9.2.0",
@@ -77,6 +81,6 @@
     "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   }
 }
