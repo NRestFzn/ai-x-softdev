@@ -31,8 +31,8 @@ route.post(
     const file = _.get(formData, 'file', {}) as FileParams
 
     const data = await documentService.uploadFile({
-      filename: `${file.destination.split('/')[1]}/${file.filename}`,
-      path: file.filename,
+      filename: file.filename,
+      path: `${file.destination.split('/')[1]}/${file.filename}`,
       ext: file.mimetype,
     })
 
@@ -50,12 +50,12 @@ route.get(
   asyncHandler(async (req: Request, res: Response) => {
     const data = await documentService.getAllDocument()
 
-    const httpResponse = HttpResponse.created({
+    const httpResponse = HttpResponse.get({
       message: 'Document uploaded successfully',
       data,
     })
 
-    res.status(201).json(httpResponse)
+    res.status(200).json(httpResponse)
   })
 )
 
