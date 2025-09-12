@@ -98,10 +98,11 @@ docker-compose up -d
 ```
 - npm run build => npm run start:prod
 - npm run watch:dev
-...
+```
 
 ## 📋 Requirements (optional)
 
+```
 - Node.js v22.14.0+
 - npm v11.4.1
 ```
