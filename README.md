@@ -13,7 +13,7 @@ untuk soal latihan, AI nya juga dapat memberikan rekomendasi video dari youtube 
 | **Name**                   | **Role**     |
 | -------------------------- | ------------ |
 | Nashir Resta Fauzian       | Backend Dev  |
-| Muhammad Yudha Pratama     | Backend Dev |
+| Muhammad Yudha Pratama     | Backend Dev  |
 | Rafi Ikbar Fahrezy         | Frontend Dev |
 | Natanael Adrie Christiawan | Frontend Dev |
 
@@ -36,6 +36,7 @@ untuk soal latihan, AI nya juga dapat memberikan rekomendasi video dari youtube 
 - ExpressJs
 - TypeScript
 - Firebase Admin SDK
+- PostgresSql
 
 ---
 
@@ -68,7 +69,7 @@ cd backend
 
 ```
 
-### Step 4. Get Firebase Admin SDK Credentials
+### Step 4. Get Firebase Admin SDK Credentials (Backend)
 
 ```
 - Open firebase console
@@ -78,9 +79,29 @@ cd backend
 
 ```
 
+### Step 5. Setup docker (Backend)
+
+```
+docker-compose up -d
+
+```
+
+### Step 6. Setup database (Backend)
+
+```
+- npm run migrate (run migrations to database)
+- npm run migrate:revert (revert latest migration)
+```
+
+### Step 7. Run Application (Backend)
+
+```
+- npm run build => npm run start:prod
+- npm run watch:dev
 ...
 
 ## 📋 Requirements (optional)
 
 - Node.js v22.14.0+
 - npm v11.4.1
+```
