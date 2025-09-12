@@ -1,19 +1,18 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { BaseEntity } from './base.entity'
+import { IDocument } from './interfaces/document.interface'
 
 @Entity('documents')
-export class Document {
+export class Document extends BaseEntity implements IDocument {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
   @Column({ type: 'text' })
-  content: string
+  filename: string
 
-  @Column({
-    type: 'text',
-    transformer: {
-      to: (value: number[]): string => `[${value.join(',')}]`,
-      from: (value: string): number[] => JSON.parse(value),
-    },
-  })
-  embedding: number[]
+  @Column({ type: 'text' })
+  path: string
+
+  @Column({ type: 'text' })
+  ext: string
 }

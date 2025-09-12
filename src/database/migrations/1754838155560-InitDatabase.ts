@@ -9,15 +9,12 @@ export class InitDatabase1754838155560 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE "documents" (
         "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-        "content" text NOT NULL,
-        "embedding" vector(768) NOT NULL,
+        "filename" text NOT NULL,
+        "path" text NOT NULL,
+        "ext" text NOT NULL,
         "created_at" TIMESTAMP NOT NULL DEFAULT now(),
         CONSTRAINT "PK_documents_id" PRIMARY KEY ("id")
       )
-    `)
-
-    await queryRunner.query(`
-      CREATE INDEX "IDX_documents_embedding" ON "documents" USING HNSW ("embedding" vector_cosine_ops)
     `)
   }
 

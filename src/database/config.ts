@@ -2,6 +2,7 @@ import { DataSource, DataSourceOptions } from 'typeorm'
 import { SeederOptions } from 'typeorm-extension'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import { env } from '@/config/env.config'
+import { Document } from './entities/document.entity'
 
 export const databaseConfig: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -10,7 +11,7 @@ export const databaseConfig: DataSourceOptions & SeederOptions = {
   username: env.DB_USERNAME,
   password: env.DB_PASSWORD,
   database: env.DB_DATABASE,
-  entities: [`${__dirname}/entities/**/*{.ts,.js}`],
+  entities: [Document],
   seeds: [`${__dirname}/seeds/*.seeder.ts`],
   // factories: ['src/infrastructures/databases/factories/*.ts'], //TODO: implement factories for seeding
   seedTracking: false,
