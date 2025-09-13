@@ -5,13 +5,11 @@ import { documentSchema } from './schema'
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai'
 import { env } from '@/src/config/env.config'
 import { ErrorResponse } from '@/src/libs/http/ErrorResponse'
+import fs from 'fs'
+import PdfParse from 'pdf-parse'
 
-const apiKey = env.GEMINI_API_KEY
-if (!apiKey) {
-  throw new Error('GEMINI_API_KEY tidak ditemukan di file .env')
-}
+const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(env.GEMINI_API_KEY)
 
-const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(apiKey)
 const model: GenerativeModel = genAI.getGenerativeModel({
   model: 'gemini-1.5-flash',
 })
@@ -41,12 +39,34 @@ class DocumentService {
     return data
   }
 
-  async askQuestion(question: string, knowledge: string) {
+  async askQuestion(question: string, filename: string): Promise<string> {
+    const documentRepository = dataSource.getRepository(Document)
+
+    const document = await documentRepository.findOne({
+      where: {
+        filename,
+      },
+    })
+
+    if (!document) {
+      throw new ErrorResponse.NotFound('Document not found')
+    }
+
+    const filePath = `public/uploads/${document.filename}`
+
+    if (!fs.existsSync(filePath)) {
+      throw new ErrorResponse.NotFound('Document not found or might be deleted')
+    }
+
+    const dataBuffer = fs.readFileSync(filePath)
+
+    const { text } = await PdfParse(dataBuffer)
+
     const prompt = `
         Anda adalah asisten AI yang bertugas menjawab pertanyaan HANYA berdasarkan KONTEKS di bawah ini.
 
         --- AWAL KONTEKS ---
-        ${knowledge}
+        ${text}
         --- AKHIR KONTEKS ---
 
         PERTANYAAN PENGGUNA:

@@ -4,8 +4,6 @@ import { FileParams, useMulter } from '@/libs/module/multer'
 import _ from 'lodash'
 import HttpResponse from '@/src/libs/http/HttpResponse'
 import documentService from '@/service/document/service'
-import fs from 'fs'
-import PdfParse from 'pdf-parse'
 
 const route = express.Router()
 
@@ -60,20 +58,13 @@ route.get(
 )
 
 route.post(
-  '/ask-question/:filepath',
+  '/ask-question/:filename',
   asyncHandler(async (req: Request, res: Response) => {
     const formData = req.getBody()
 
-    const dataBuffer = fs.readFileSync(
-      'public/uploads/1757692841408-resume_nashir_resta_fauzian.pdf'
-    )
+    const { filename } = req.getParams()
 
-    const dataText = await PdfParse(dataBuffer)
-
-    const data = await documentService.askQuestion(
-      formData.question,
-      dataText.text
-    )
+    const data = await documentService.askQuestion(formData.question, filename)
 
     res.status(200).json({
       message: 'success',
